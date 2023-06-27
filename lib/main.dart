@@ -1,9 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:learningdart/constants/routes.dart';
+import 'package:learningdart/services/auth/auth_service.dart';
 import 'package:learningdart/views/Register_view.dart';
 import 'package:learningdart/views/login_view.dart';
+import 'package:learningdart/views/note_view.dart';
 import 'package:learningdart/views/verify_email.dart';
 import 'firebase_options.dart';
 //import 'dart:developer' as devtools show log;
@@ -14,15 +14,15 @@ void main() {
     MaterialApp(
       title: 'Flutter Demo', //anubhav is the best
       theme: ThemeData(
-        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurpl),
         //useMaterial3: true,
         primarySwatch: Colors.blue,
       ),
       home: const HomePage(),
       routes: {
         loginRoute: (context) => const LoginView(),
-       registerRoute: (context) => const RegisterView(),
-        notesRoute : (context) => const NotesView(),
+        registerRoute: (context) => const RegisterView(),
+        notesRoute: (context) => const NotesView(),
         verifyEmailRoute: (context) => const VerifyEmailView(),
       },
     ),
@@ -35,15 +35,13 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      ),
+      future: AuthService.firebase().intialize(),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.done:
-            final user = FirebaseAuth.instance.currentUser;
+            final user = AuthService.firebase().currentUser;
             if (user != null) {
-              if (user.emailVerified) {
+              if (user.isEmailVerifed) {
                 return const NotesView();
               } else {
                 //print('You need to verify your email first');
@@ -59,79 +57,4 @@ class HomePage extends StatelessWidget {
       },
     );
   }
-}
-
-enum MenuAction { logout }
-
-class NotesView extends StatefulWidget {
-  const NotesView({super.key});
-
-  @override
-  State<NotesView> createState() => _NotesViewState();
-}
-
-class _NotesViewState extends State<NotesView> {
-  //get devtools => null;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Main Ui'), 
-      actions: [
-       PopupMenuButton<MenuAction>(
-            onSelected: (value) async {
-              switch (value) {
-                case MenuAction.logout:
-                  final shouldLogout = await showLogOutDialog(context);
-                  if (shouldLogout) {
-                    await FirebaseAuth.instance.signOut();
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                    loginRoute,
-                      (_) => false,
-                    );
-                }
-
-                break;
-              default:
-            }
-          },
-          itemBuilder: (context) {
-            return [
-              const PopupMenuItem<MenuAction>(
-                value: MenuAction.logout,
-                child: Text('log out '),
-              ),
-            ];
-          },
-        )
-      ]),
-      body: const Text('hello world'),
-    );
-  }
-}
-
-Future<bool> showLogOutDialog(BuildContext context) {
-  return showDialog<bool>(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text('Sign out'),
-        content: const Text('Are you sure you want to sign out?'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(false);
-            },
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(true);
-            },
-            child: const Text('Log out'),
-          ),
-        ],
-      );
-    },
-  ).then((value) => value ?? false);
 }

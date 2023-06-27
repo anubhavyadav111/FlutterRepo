@@ -1,9 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
 import 'package:learningdart/constants/routes.dart';
-
+import 'package:learningdart/services/auth/auth_exception.dart';
+import 'package:learningdart/services/auth/auth_service.dart';
 import '../utilities/show_error_dialog.dart';
 
 class LoginView extends StatefulWidget {
@@ -63,49 +62,47 @@ class _LoginViewState extends State<LoginView> {
                 final email = _email.text;
                 final password = _password.text;
                 try {
-                  await FirebaseAuth.instance.signInWithEmailAndPassword(
-                      email: email, password: password);
-                  // ignore: use_build_context_synchronously
-                  final user = FirebaseAuth.instance.currentUser;
-                  if (user?.emailVerified?? false) {
-                     // ignore: use_build_context_synchronously
-                     Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    notesRoute,
-                    (route) => false,
-                  );
-                  } else{
-                     // ignore: use_build_context_synchronously
-                     Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    verifyEmailRoute,
-                    (route) => false,
-                  );
-                  }
                  
-                } on FirebaseAuthException catch (e) {
-                  if (e.code == 'user-not-found') {
-                    await showErrorDialog(
+                  await AuthService.firebase().logIn(
+                    email: email,
+                    password: password,
+                  );
+                  // ignore: use_build_context_synchronously
+                  final user =AuthService.firebase().currentUser;
+                  if (user?.isEmailVerifed ?? false) {
+                    // ignore: use_build_context_synchronously
+                    Navigator.pushNamedAndRemoveUntil(
                       context,
-                      'User not found',
+                      notesRoute,
+                      (route) => false,
                     );
-                  } else if (e.code == 'wrong-password') {
-                    await showErrorDialog(
+                  } else {
+                    // ignore: use_build_context_synchronously
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      verifyEmailRoute,
+                      (route) => false,
+                    );
+                  }
+                }
+                 on UserNotFoundAuthException{
+                     await showErrorDialog(
+                      context,
+                      'User not found', );
+                 }
+                 on WrongpasswordAuthException{
+                  await showErrorDialog(
                       context,
                       'Wrong Credentials',
                     );
-                  } else {
-                    await showErrorDialog(
-                      context,
-                      'Error: ${e.code}',
-                    );
-                  }
-                } catch (e) {
+                 }
+                 on GenericAuthExpception{
                   await showErrorDialog(
                     context,
-                    e.toString(),
+                    'Authentication error',
                   );
-                }
+                 }
+                      
               },
               child: const Text('Login')),
           TextButton(
