@@ -41,7 +41,7 @@ class HomePage extends StatelessWidget {
           case ConnectionState.done:
             final user = AuthService.firebase().currentUser;
             if (user != null) {
-              if (user.isEmailVerifed) {
+              if (user.isEmailVerified) {
                 return const NotesView();
               } else {
                 //print('You need to verify your email first');
