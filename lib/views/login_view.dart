@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:learningdart/constants/routes.dart';
 import 'package:learningdart/services/auth/auth_exception.dart';
 import 'package:learningdart/services/auth/auth_service.dart';
-import '../utilities/show_error_dialog.dart';
+import '../utilities/dialogs/error_dialog.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -62,13 +62,12 @@ class _LoginViewState extends State<LoginView> {
                 final email = _email.text;
                 final password = _password.text;
                 try {
-                 
                   await AuthService.firebase().logIn(
                     email: email,
                     password: password,
                   );
                   // ignore: use_build_context_synchronously
-                  final user =AuthService.firebase().currentUser;
+                  final user = AuthService.firebase().currentUser;
                   if (user?.isEmailVerified ?? false) {
                     // ignore: use_build_context_synchronously
                     Navigator.pushNamedAndRemoveUntil(
@@ -84,25 +83,22 @@ class _LoginViewState extends State<LoginView> {
                       (route) => false,
                     );
                   }
-                }
-                 on UserNotFoundAuthException{
-                     await showErrorDialog(
-                      context,
-                      'User not found', );
-                 }
-                 on WrongpasswordAuthException{
+                } on UserNotFoundAuthException {
                   await showErrorDialog(
-                      context,
-                      'Wrong Credentials',
-                    );
-                 }
-                 on GenericAuthExpception{
+                    context,
+                    'User not found',
+                  );
+                } on WrongpasswordAuthException {
+                  await showErrorDialog(
+                    context,
+                    'Wrong Credentials',
+                  );
+                } on GenericAuthExpception {
                   await showErrorDialog(
                     context,
                     'Authentication error',
                   );
-                 }
-                      
+                }
               },
               child: const Text('Login')),
           TextButton(

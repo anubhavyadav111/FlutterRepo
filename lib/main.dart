@@ -3,8 +3,9 @@ import 'package:learningdart/constants/routes.dart';
 import 'package:learningdart/services/auth/auth_service.dart';
 import 'package:learningdart/views/Register_view.dart';
 import 'package:learningdart/views/login_view.dart';
+import 'package:learningdart/views/notes/create_update_note_view.dart';
 import 'package:learningdart/views/notes/note_view.dart';
-import 'package:learningdart/views/notes/view_note_view.dart';
+import 'package:learningdart/views/notes/create_update_note_view.dart';
 import 'package:learningdart/views/verify_email.dart';
 import 'package:path/path.dart';
 import 'firebase_options.dart';
@@ -26,7 +27,7 @@ void main() {
         registerRoute: (context) => const RegisterView(),
         notesRoute: (context) => const NotesView(),
         verifyEmailRoute: (context) => const VerifyEmailView(),
-        newNoteRoute: (context) => const NewNoteView(),
+        createOrUpdateNoteRoute: (context) => const CreateUpdateNoteView(),
       },
     ),
   );
