@@ -5,10 +5,7 @@ import 'package:learningdart/views/Register_view.dart';
 import 'package:learningdart/views/login_view.dart';
 import 'package:learningdart/views/notes/create_update_note_view.dart';
 import 'package:learningdart/views/notes/note_view.dart';
-import 'package:learningdart/views/notes/create_update_note_view.dart';
 import 'package:learningdart/views/verify_email.dart';
-import 'package:path/path.dart';
-import 'firebase_options.dart';
 //import 'dart:developer' as devtools show log;
 
 void main() {
