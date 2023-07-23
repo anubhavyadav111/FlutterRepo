@@ -1,6 +1,7 @@
+//import 'dart:async';
 import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:learningdart/helpers/loading/loading_screen_controller.dart';
 
 class LoadingScreen {

@@ -5,6 +5,7 @@ import 'package:learningdart/services/auth/bloc/auth_event.dart';
 import 'package:learningdart/services/auth/bloc/auth_state.dart';
 import 'package:learningdart/services/auth/firebase_auth_provider.dart';
 import 'package:learningdart/views/Register_view.dart';
+import 'package:learningdart/views/forgot_password_view.dart';
 import 'package:learningdart/views/login_view.dart';
 import 'package:learningdart/views/notes/create_update_note_view.dart';
 import 'package:learningdart/views/notes/note_view.dart';
@@ -40,7 +41,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<AuthBloc>().add(const AuthEventInitialize());
-  return BlocConsumer<AuthBloc, AuthState>(
+    return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state.isLoading) {
           LoadingScreen().show(
@@ -60,6 +61,8 @@ class HomePage extends StatelessWidget {
               return const VerifyEmailView();
             } else if (state is AuthStateLoggedOut) {
               return const LoginView();
+            } else if (state is AuthStateForgotPassword) {
+              return const ForgotPasswordView();
             } else if (state is AuthStateRegistering) {
               return const RegisterView();
             } else {
