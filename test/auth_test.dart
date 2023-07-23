@@ -49,7 +49,7 @@ void main() {
         password: 'foobar',
       );
       expect(badPasswordUser,
-          throwsA(const TypeMatcher<WrongpasswordAuthException>()));
+          throwsA(const TypeMatcher<WrongPasswordAuthException>()));
 
       final user = await provider.createUser(
         email: 'foo',
@@ -114,7 +114,7 @@ class MockAuthProvider implements AuthProvider {
   }) {
     if (!isInitialized) throw NotInitializedException();
     if (email == 'foo@bar.com') throw UserNotFoundAuthException();
-    if (password == 'foobar') throw WrongpasswordAuthException();
+    if (password == 'foobar') throw WrongPasswordAuthException();
     const user = AuthUser(
       id: 'my_id',
       isEmailVerified: false,
@@ -143,11 +143,5 @@ class MockAuthProvider implements AuthProvider {
       email: 'foo@bar.com',
     );
     _user = newUser;
-  }
-
-  @override
-  Future<void> intialize() {
-    // TODO: implement intialize
-    throw UnimplementedError();
   }
 }
