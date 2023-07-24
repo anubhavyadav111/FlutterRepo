@@ -7,7 +7,9 @@ import 'package:learningdart/utilities/dialogs/password_reset_email_sent_dialog.
 
 import '../services/auth/bloc/auth_event.dart';
 
-class ForgotPasswordView extends StatefulWidget {
+class 
+
+ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({Key? key}) : super(key: key);
 
   @override
